@@ -14,16 +14,11 @@ namespace fde{
         std::size_t size() const;
         std::size_t dimension() const;
 
-
-        /*
-        vector used explicitely (instead of Sequence) 
-        to avoid confusion of whats being pushed
-        */
          
         void push_back(
             double time, 
-            const std::vector<double>& yn,
-            const std::vector<double>& fn
+            const State& yn,
+            const State& fn
         );
 
         

@@ -17,8 +17,8 @@ fde::Solution::Solution(
 
 void fde::Solution::push_back(
     double time, 
-    const std::vector<double>& yn,
-    const std::vector<double>& fn
+    const State& yn,
+    const State& fn
 ){
     if (
         (yn.size() != y.size()) or (fn.size() != f.size())
@@ -42,7 +42,7 @@ std::size_t fde::Solution::dimension() const{
 void fde::Solution::write_csv(
     std::string filename,
     int precision
-) const{
+) const {
     std::ofstream file(filename);
     // normally c++ writes only 6 digits to csv => error at O(1e-6)
     file << std::setprecision(precision);

@@ -28,7 +28,7 @@ __pycache__/
 
 # Generated data / plots
 data/
-images/
+plots/
 
 # Editor folders
 .vscode/

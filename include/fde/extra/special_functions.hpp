@@ -1,3 +1,4 @@
+#pragma once
 #include <fde/core/types.hpp>
 
 namespace fde{
