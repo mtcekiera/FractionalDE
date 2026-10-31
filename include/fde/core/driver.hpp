@@ -2,6 +2,7 @@
 #include <fde/core/types.hpp>
 #include <fde/core/solution.hpp>
 #include <fde/solvers/solver.hpp>
+#include <fde/core/system.hpp>
 
 namespace fde{
 

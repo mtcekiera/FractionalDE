@@ -1,6 +1,7 @@
 #pragma once
 #include <fde/core/types.hpp>
 #include <fde/core/solution.hpp>
+#include <fde/core/system.hpp>
 
 namespace fde{
     // abstract class for inheritence

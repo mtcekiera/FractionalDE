@@ -5,6 +5,8 @@
 #include <vector>
 #include <functional>
 
+#include <fde/core/square_matrix.hpp>
+
 namespace fde{
     constexpr double pi = M_PI;
 
@@ -22,26 +24,34 @@ namespace fde{
     // State as in current system state at n-th step
     using State = std::vector<double>;
 
+    // additional operators
+    State& operator+=(State& a, const State& b);
+    State operator+(State a, const State& b);
+    State& operator-=(State& a, const State& b);
+    State operator-(State a, const State& b);
+
+    State operator*(State a, double scalar);
+    State operator*(double scalar, State a);
+
+    // infinity norm
+    double norm_inf(const State& st);
+
+    /* 
+        here RHS and jacobian do not return anything, thus error
+        management must be handled inside of them
+    */
     using RHS = std::function<
-        void(double t, const State& y, State& result) 
         // result saved to State& result variable
+        void(double t, const State& y, State& result) 
+    >;
+    
+    /*
+        jacobian used only for the newtons method, thus it
+        does not require dfdt
+    */
+    using Jacobian = std::function<
+        void(double t, const State& y, SquareMatrix& J)
     >;
 
-    // system of equations
-    struct System{
-        double alpha;
-        State y0;
-        RHS func;
-        double T;
-        std::size_t N;
 
-        Sequence uniform_timegrid() const;
-        double dt() const;
-    };
-
-    Sequence uniform_timegrid(
-        double t0,
-        double T,
-        std::size_t N
-    );
 }

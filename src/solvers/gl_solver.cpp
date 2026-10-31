@@ -2,20 +2,19 @@
 #include <fde/core/types.hpp>
 #include <fde/core/newton_method.hpp>
 #include <cmath>
-#include <iostream>
 
 namespace fde{
 
     void GLSolver::initialize(
         const System& system
     ){
-        weights.resize(system.N+1);
+        weights.resize(system.N()+1);
 
         weights[0] = 1.0;
-        for (std::size_t i = 1; i<=system.N; i++){
+        for (std::size_t i = 1; i<=system.N(); i++){
             weights[i] = 
             (
-                1.0 - (1.0 + system.alpha) / i
+                1.0 - (1.0 + system.alpha()) / i
             ) * weights[i-1];
         }
     }
@@ -25,11 +24,12 @@ namespace fde{
         const System& system,
         const Solution& solution
     ){
+
         const double h = system.dt();
         const double t = h*n;
         // important to first input t=0, y0, f(y0) into solution
         const std::size_t dim = solution.dimension();
-        const double alpha = system.alpha;
+        const double alpha = system.alpha();
         const double a = std::pow(h, alpha);
         State c(dim);
         State yn1(dim);

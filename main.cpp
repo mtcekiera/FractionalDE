@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fde/extra/special_functions.hpp>
+#include <fde/core/square_matrix.hpp>
 #include <fde/core/types.hpp>
 #include <tests/test_ml.hpp>
 #include <tests/test_gl.hpp>
@@ -20,7 +21,9 @@ int main(){
     // std::cout<<"\n";
 
 
-    test_gl("data/gl_test.csv");
+    test_gl("data/gl_test_a1.csv", 1.0);
+    test_gl("data/gl_test_a05.csv", 0.5);
+
 
     // std::cout<<fde::mittag_leffler_gerrappa(-1.0, 1.0, 2.0, 0.1, 120);
     return 0;
