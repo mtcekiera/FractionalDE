@@ -31,22 +31,22 @@ namespace fde{
         const std::size_t dim = solution.dimension();
         const double alpha = system.alpha();
         const double a = std::pow(h, alpha);
-        State c(dim);
-        State yn1(dim);
+        State c_n(dim);
+        State y_nm1(dim);
         for (std::size_t d=0; d<dim; d++){
 
-            const State& y = solution.y[d];
-            yn1[d] = y.back();
-            const double y0 = y[0];
-            double cn = y0;
+            const Sequence& y_d = solution.y[d];
+            y_nm1[d] = y_d.back();
+            const double y_d0 = y_d[0];
+            double c_nd = y_d0;
             // for j=n: y_0 - y_0 = 0, no need to go through it
             for (std::size_t j=1; j<n; j++)
-                cn -= weights[j] * (y[n-j] - y0); // minus!
-            c[d] = cn;
+                c_nd -= weights[j] * (y_d[n-j] - y_d0);
+            c_n[d] = c_nd;
         }
 
         return newton_method(
-            system, t, c, a, yn1
+            system, t, c_n, a, y_nm1
         );
 
     }

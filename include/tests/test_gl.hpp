@@ -1,5 +1,6 @@
 #pragma once
 #include <fde/solvers/gl_solver.hpp>
+#include <fde/solvers/l1_solver.hpp>
 #include <fde/core/driver.hpp>
 #include <fde/core/types.hpp>
 
@@ -29,10 +30,10 @@ void test_gl(std::string filename, double alpha){
     fde::System system(func, jac, y0, alpha, T, N);
 
 
-    fde::GLSolver gl;
-    gl.initialize(system);
+    fde::L1Solver l1;
+    l1.initialize(system);
     fde::Driver driver;
 
-    fde::Solution solution = driver.solve(system, gl);
+    fde::Solution solution = driver.solve(system, l1);
     solution.write_csv(filename);
 }

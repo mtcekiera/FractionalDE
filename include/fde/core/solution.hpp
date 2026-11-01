@@ -14,7 +14,6 @@ namespace fde{
         std::size_t size() const;
         std::size_t dimension() const;
 
-         
         void push_back(
             double time, 
             const State& yn,
