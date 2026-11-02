@@ -1,12 +1,16 @@
 #pragma once
-#include <fde/solvers/gl_solver.hpp>
-#include <fde/solvers/l1_solver.hpp>
+#include <fde/solvers/solver.hpp>
 #include <fde/core/driver.hpp>
 #include <fde/core/types.hpp>
 
-void test_gl(std::string filename, double alpha){
-    double lambda = 2.0;
-    alpha = alpha;
+void test_solver_mittag_leffler(
+    std::string filename, 
+    fde::Solver& solver,
+    double alpha,
+    double lambda = 1.0,
+    double T = 1.0,
+    std::size_t N = 1000
+){
     
     fde::State y0 = {1.0};
 
@@ -24,16 +28,14 @@ void test_gl(std::string filename, double alpha){
     ){
         J(0,0) = -lambda;
     };
-    double T = 1.0;
-    std::size_t N = 1000;
 
     fde::System system(func, jac, y0, alpha, T, N);
 
+    solver.initialize(system);
 
-    fde::L1Solver l1;
-    l1.initialize(system);
     fde::Driver driver;
 
-    fde::Solution solution = driver.solve(system, l1);
+    fde::Solution solution = driver.solve(system, solver);
+
     solution.write_csv(filename);
 }

@@ -21,7 +21,7 @@ namespace fde{
 
         for (std::size_t n = 1; n<=system.N(); n++){
             const double t = dt * n;
-            yn = solver.step(n, system, solution);
+            yn = solver.step(system, solution);
             system.func(t, yn, fn);
 
             solution.push_back(t, yn, fn);

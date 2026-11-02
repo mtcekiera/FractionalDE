@@ -47,25 +47,25 @@ namespace fde{
         double t,
         const State& c,
         double a,
-        const State& yn,
+        const State& y_nm1,
         const double atol,
         const double rtol,
         const int max_iter
     ){
 
-        const std::size_t dim = yn.size();
+        const std::size_t dim = y_nm1.size();
 
         if (dim != c.size())
-            throw std::invalid_argument("newton_method: yn and c sizes do not match");
+            throw std::invalid_argument("newton_method: y_nm1 and c sizes do not match");
 
         SquareMatrix J_f(dim);
-        system.jac(t, yn, J_f);
+        system.jac(t, y_nm1, J_f);
 
         SquareMatrix identity = SquareMatrix::identity(dim);
         SquareMatrix J_R = identity - a*J_f;
 
         // initial guess
-        State y = yn;
+        State y = y_nm1;
 
         State f(dim);
         State R(dim);

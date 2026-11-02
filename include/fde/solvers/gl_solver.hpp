@@ -13,7 +13,6 @@ namespace fde{
         ) override;
 
         State step(
-            std::size_t n,
             const System& system,
             const Solution& solution
         ) override;

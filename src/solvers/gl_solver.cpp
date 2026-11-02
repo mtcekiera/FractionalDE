@@ -20,10 +20,10 @@ namespace fde{
     }
 
     State GLSolver::step(
-        std::size_t n,
         const System& system,
         const Solution& solution
     ){
+        std::size_t n = solution.last_n() + 1;
 
         const double h = system.dt();
         const double t = h*n;
@@ -35,7 +35,7 @@ namespace fde{
         State y_nm1(dim);
         for (std::size_t d=0; d<dim; d++){
 
-            const Sequence& y_d = solution.y[d];
+            const Sequence& y_d = solution.get_y(d);
             y_nm1[d] = y_d.back();
             const double y_d0 = y_d[0];
             double c_nd = y_d0;

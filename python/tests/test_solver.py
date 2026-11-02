@@ -88,7 +88,7 @@ def plot_error(
 
     return error
 
-LAMBDA = 2.0
+LAMBDA = 1.0
 def theory_1(t):
     return np.exp(-LAMBDA * t)
 
@@ -96,11 +96,18 @@ def theory_1(t):
 def theory_2(t):
     return np.exp(LAMBDA**2 * t) * spc.erfc(LAMBDA * np.sqrt(t))
 # alpha = 1
-data_a1 = pd.read_csv("data/gl_test_a1.csv")
-plot_relation(data_a1["t"], data_a1["y0"], theory_1, "plots/gl_test_a1.png", title=r"$\alpha=1.0,\,h=0.001$")
-plot_error(data_a1["t"], data_a1["y0"], theory_1, "plots/gl_test_a1_error.png", title=r"$\alpha=1.0,\,h=0.001$")
 
-# alpha = 0.5
-data_a05 = pd.read_csv("data/gl_test_a05.csv")
-plot_relation(data_a05["t"], data_a05["y0"], theory_2, "plots/gl_test_a05.png", title=r"$\alpha=0.5,\,h=0.001$")
-plot_error(data_a05["t"], data_a05["y0"], theory_2, "plots/gl_test_a05_error.png", title=r"$\alpha=0.5,\,h=0.001$")
+
+def plot_tests(prefix):
+    data_a1 = pd.read_csv(f"data/{prefix}_test_a1.csv")
+    plot_relation(data_a1["t"], data_a1["y0"], theory_1, f"plots/{prefix}_test_a1.png", title=r"$\alpha=1.0,\,h=0.001$")
+    plot_error(data_a1["t"], data_a1["y0"], theory_1, f"plots/{prefix}_test_a1_error.png", title=r"$\alpha=1.0,\,h=0.001$")
+
+    # alpha = 0.5
+    data_a05 = pd.read_csv(f"data/{prefix}_test_a05.csv")
+    plot_relation(data_a05["t"], data_a05["y0"], theory_2, f"plots/{prefix}_test_a05.png", title=r"$\alpha=0.5,\,h=0.001$")
+    plot_error(data_a05["t"], data_a05["y0"], theory_2, f"plots/{prefix}_test_a05_error.png", title=r"$\alpha=0.5,\,h=0.001$")
+
+solvers = ['gl', 'l1', 'abm', 'pt']
+for solver in solvers:
+    plot_tests(solver)

@@ -19,7 +19,7 @@ namespace fde{
         double t,
         const State& c,
         double a,
-        const State& yn,
+        const State& y_nm1,
         const double atol = 1e-10,
         const double rtol = 1e-8,
         const int max_iter = 20

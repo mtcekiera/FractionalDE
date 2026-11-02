@@ -17,10 +17,10 @@ namespace fde{
 
     
     State L1Solver::step(
-        std::size_t n,
         const System& system,
         const Solution& solution
     ){
+        std::size_t n = solution.last_n() + 1;
         const double h = system.dt();
         const double t = h*n;
         const std::size_t dim = solution.dimension();
@@ -29,7 +29,7 @@ namespace fde{
         State c_n(dim);
         State y_nm1(dim);
         for (std::size_t d=0; d<dim; d++){
-            const Sequence& y = solution.y[d];
+            const Sequence& y = solution.get_y(d);
             const double y_nm1_d = y.back();
             y_nm1[d] = y_nm1_d;
             double c_nd = y_nm1_d;

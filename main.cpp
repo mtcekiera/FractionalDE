@@ -2,29 +2,50 @@
 #include <fde/extra/special_functions.hpp>
 #include <fde/core/square_matrix.hpp>
 #include <fde/core/types.hpp>
+
+#include <fde/solvers/abm_solver.hpp>
+#include <fde/solvers/gl_solver.hpp>
+#include <fde/solvers/l1_solver.hpp>
+#include <fde/solvers/pt_solver.hpp>
+
 #include <tests/test_ml.hpp>
-#include <tests/test_gl.hpp>
+#include <tests/test_solver.hpp>
 #include <vector>
 
 
 
 int main(){
-    // const double dz = 0.01;
-    // const double z0 = -1.0;
-    // const double zEnd = 0.0;
+    
+    fde::GLSolver gl;
+    fde::L1Solver l1;
+    fde::ABMSolver abm;
+    fde::PTSolver pt;
 
-    // std::vector<double> alphas_05_1 = {0.5, 1.0};
-    // test_ml("./data/ML_05_1.csv", alphas_05_1);
-    // fde::Sequence time = fde::uniform_timegrid(1.0, 5.0, 10);
-    // for (std::size_t i=0; i<time.size(); i++)
-    //     std::cout<<time[i]<<' ';
-    // std::cout<<"\n";
+    test_solver_mittag_leffler(
+        "data/gl_test_a05.csv", gl, 0.5
+    );
+    test_solver_mittag_leffler(
+        "data/gl_test_a1.csv", gl, 1.0
+    );
+    test_solver_mittag_leffler(
+        "data/l1_test_a05.csv", l1, 0.5
+    );
+    test_solver_mittag_leffler(
+        "data/l1_test_a1.csv", l1, 1.0
+    );
+    test_solver_mittag_leffler(
+        "data/abm_test_a05.csv", abm, 0.5
+    );
+    test_solver_mittag_leffler(
+        "data/abm_test_a1.csv", abm, 1.0
+    );
+    test_solver_mittag_leffler(
+        "data/pt_test_a05.csv", pt, 0.5
+    );
+    test_solver_mittag_leffler(
+        "data/pt_test_a1.csv", pt, 1.0
+    );
 
 
-    test_gl("data/gl_test_a1.csv", 1.0);
-    test_gl("data/gl_test_a05.csv", 0.5);
-
-
-    // std::cout<<fde::mittag_leffler_gerrappa(-1.0, 1.0, 2.0, 0.1, 120);
     return 0;
 }
