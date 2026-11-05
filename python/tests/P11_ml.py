@@ -89,11 +89,11 @@ if __name__ == "__main__":
 
 
 
-    DATA_DIR = Path("data")
-    PLOTS_DIR = Path("plots")
+    DATA_DIR = Path("data/P11_ml")
+    PLOTS_DIR = Path("plots/P11_ml")
 
     PLOTS_DIR.mkdir(parents=True, exist_ok=True)
-    data = pd.read_csv(DATA_DIR / "ML_05_1.csv")
+    data = pd.read_csv(DATA_DIR / "P11_ml.csv")
     z = data["z"]
     x = -z
     

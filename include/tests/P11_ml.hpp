@@ -6,16 +6,20 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <filesystem>
 
 double MU = 2.0;
 double H = 0.1;
 int N = 120;
+std::vector<double> alphas = {0.5, 1.0};
 
-
-void test_ml(std::string filename, std::vector<double> alphas,
+void P11_ml(
     double z0 = -1.0, double zEnd = 0.0, double dz = 0.01
 ){
-    std::ofstream file(filename);
+    std::filesystem::path dir = std::filesystem::current_path();
+    std::filesystem::path data_dir = dir / "data/P11_ml";
+
+    std::ofstream file(data_dir / "P11_ml.csv");
     const int steps = static_cast<int>( (zEnd-z0)/dz );
 
     // normally c++ saves only 6 digits to csv => error at O(1e-6)

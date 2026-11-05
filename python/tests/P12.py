@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import scipy.special as spc
+from pathlib import Path
 
 
 def plot_relation(
@@ -99,14 +100,18 @@ def theory_2(t):
 
 
 def plot_tests(prefix):
-    data_a1 = pd.read_csv(f"data/{prefix}_test_a1.csv")
-    plot_relation(data_a1["t"], data_a1["y0"], theory_1, f"plots/{prefix}_test_a1.png", title=r"$\alpha=1.0,\,h=0.001$")
-    plot_error(data_a1["t"], data_a1["y0"], theory_1, f"plots/{prefix}_test_a1_error.png", title=r"$\alpha=1.0,\,h=0.001$")
+    DATA_DIR = Path("data/P12")
+    PLOTS_DIR = Path("plots/P12")
+
+    PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+    data_a1 = pd.read_csv(DATA_DIR/f"{prefix}_test_a1.csv")
+    plot_relation(data_a1["t"], data_a1["y0"], theory_1, PLOTS_DIR/f"{prefix}_test_a1.png", title=r"$\alpha=1.0,\,h=0.001$")
+    plot_error(data_a1["t"], data_a1["y0"], theory_1, PLOTS_DIR/f"{prefix}_test_a1_error.png", title=r"$\alpha=1.0,\,h=0.001$")
 
     # alpha = 0.5
-    data_a05 = pd.read_csv(f"data/{prefix}_test_a05.csv")
-    plot_relation(data_a05["t"], data_a05["y0"], theory_2, f"plots/{prefix}_test_a05.png", title=r"$\alpha=0.5,\,h=0.001$")
-    plot_error(data_a05["t"], data_a05["y0"], theory_2, f"plots/{prefix}_test_a05_error.png", title=r"$\alpha=0.5,\,h=0.001$")
+    data_a05 = pd.read_csv(DATA_DIR/f"{prefix}_test_a05.csv")
+    plot_relation(data_a05["t"], data_a05["y0"], theory_2, PLOTS_DIR/f"{prefix}_test_a05.png", title=r"$\alpha=0.5,\,h=0.001$")
+    plot_error(data_a05["t"], data_a05["y0"], theory_2, PLOTS_DIR/f"{prefix}_test_a05_error.png", title=r"$\alpha=0.5,\,h=0.001$")
 
 solvers = ['gl', 'l1', 'abm', 'pt']
 for solver in solvers:
