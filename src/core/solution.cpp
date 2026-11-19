@@ -24,6 +24,11 @@ namespace fde{
     std::vector<Sequence> Solution::get_y() const{
         return y;
     }
+    double Solution::get_t(std::size_t n) const{
+        if (n >= t.size())
+            throw std::invalid_argument("Solution: index out of range");
+        return t[n];
+    }
     Sequence Solution::get_y(std::size_t d) const{
         if (d >= y.size())
             throw std::invalid_argument("Solution: index out of range");

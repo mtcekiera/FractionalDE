@@ -1,118 +1,87 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import scipy.special as spc
 from pathlib import Path
 
+DATA_DIR = Path("data/P12")
+PLOTS_DIR = Path("plots/P12")
 
-def plot_relation(
-    x, numerical, analytical, filename, *,
-    num_label="Numerical",
-    ana_label="Analytical",
-    xlabel="x",
-    ylabel="f(x)",
-    title=None,
-    legend=True,
-    logy = False
-):
+methods = {
+    "GL": "gl.csv",
+    "L1": "l1.csv",
+    "ABM": "abm.csv",
+    "PI-trapezoid": "pt.csv"
+}
 
-    x = np.asarray(x)
-    numerical = np.asarray(numerical)
-    exact = analytical(x)
-
-    fig, ax = plt.subplots()
-
-    ax.plot(x, numerical, color="black",
-            linestyle="-", label=num_label)
-
-    ax.plot(x, exact, color="blue",
-            linestyle="--", label=ana_label)
-    if logy:
-        ax.set_yscale("log")
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    if title is not None:
-        ax.set_title(title)
-    ax.grid()
-
-    if legend:
-        ax.legend()
-
-    # Path(filename).parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(filename, dpi=300, bbox_inches="tight")
-    plt.close(fig)
-    plt.clf()
+data = {
+    name: pd.read_csv(DATA_DIR / filename)
+    for name, filename in methods.items()
+}
 
 
-def plot_error(
-    x, numerical, analytical, filename, *,
-    relative=True,
-    log_scale=True,
-    xlabel="x",
-    ylabel=None,
-    title=None
-):
-    x = np.asarray(x)
-    numerical = np.asarray(numerical)
-    exact = np.asarray(analytical(x))
+def plot_errors(column, ylabel, title, filename):
 
-    error = np.abs(numerical - exact)
+    plt.figure(figsize=(9, 6))
 
-    if relative:
-        error = np.divide(
-            error,
-            np.abs(exact),
-            out=np.full_like(error, np.nan, dtype=float),
-            where=np.abs(exact) > 0
+    for name, df in data.items():
+
+        N = df["N"].to_numpy()
+        error = df[column].to_numpy()
+
+        valid = (N > 0) & (error > 0)
+
+        log_N = np.log(N[valid])
+        log_error = np.log(error[valid])
+
+        a, b = np.polyfit(log_N, log_error, 1)
+
+        points, = plt.loglog(
+            N, error,
+            marker="x",
+            linestyle="None",
+            markersize=10
         )
 
-    fig, ax = plt.subplots()
+        color = points.get_color()
 
-    ax.scatter(x, error, s=15)
+        N_fit = np.geomspace(N[valid].min(), N[valid].max(), 200)
+        error_fit = np.exp(b) * N_fit**a
 
-    if log_scale:
-        ax.set_yscale("log")
+        plt.loglog(
+            N_fit, error_fit,
+            linestyle="--",
+            linewidth=1.5,
+            color=color,
+            label=f"{name} (a = {a:.3f})",
+            alpha=0.5
+        )
 
-    ax.set_xlabel(xlabel)
+    plt.xlabel("Number of time steps $N$")
+    plt.ylabel(ylabel)
+    plt.title(title)
 
-    if ylabel is None:
-        ylabel = "Relative error" if relative else "Absolute error"
+    plt.xticks(
+        [2**k for k in range(4, 11)],
+        [str(2**k) for k in range(4, 11)]
+    )
 
-    ax.set_ylabel(ylabel)
-    if title is not None:
-        ax.set_title(title)
-    ax.grid()
+    plt.grid(True, which="both", alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
 
-    # Path(filename).parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(filename, dpi=300, bbox_inches="tight")
-    plt.close(fig)
-
-    return error
-
-LAMBDA = 1.0
-def theory_1(t):
-    return np.exp(-LAMBDA * t)
-
-# z = t**alpha, alpha = 0.5 => z = t**0.5
-def theory_2(t):
-    return np.exp(LAMBDA**2 * t) * spc.erfc(LAMBDA * np.sqrt(t))
-# alpha = 1
+    plt.savefig(PLOTS_DIR / filename, dpi=300)
 
 
-def plot_tests(prefix):
-    DATA_DIR = Path("data/P12")
-    PLOTS_DIR = Path("plots/P12")
+plot_errors(
+    "final_error",
+    r"$\varepsilon_N = |y_N-y(T)|$",
+    "Final absolute error",
+    "final_error.png"
+)
 
-    PLOTS_DIR.mkdir(parents=True, exist_ok=True)
-    data_a1 = pd.read_csv(DATA_DIR/f"{prefix}_test_a1.csv")
-    plot_relation(data_a1["t"], data_a1["y0"], theory_1, PLOTS_DIR/f"{prefix}_test_a1.png", title=r"$\alpha=1.0,\,h=0.001$")
-    plot_error(data_a1["t"], data_a1["y0"], theory_1, PLOTS_DIR/f"{prefix}_test_a1_error.png", title=r"$\alpha=1.0,\,h=0.001$")
-
-    # alpha = 0.5
-    data_a05 = pd.read_csv(DATA_DIR/f"{prefix}_test_a05.csv")
-    plot_relation(data_a05["t"], data_a05["y0"], theory_2, PLOTS_DIR/f"{prefix}_test_a05.png", title=r"$\alpha=0.5,\,h=0.001$")
-    plot_error(data_a05["t"], data_a05["y0"], theory_2, PLOTS_DIR/f"{prefix}_test_a05_error.png", title=r"$\alpha=0.5,\,h=0.001$")
-
-solvers = ['gl', 'l1', 'abm', 'pt']
-for solver in solvers:
-    plot_tests(solver)
+plot_errors(
+    "max_error",
+    r"$\varepsilon_{\max} = \max_n |y_n-y(t_n)|$",
+    "Maximum absolute error",
+    "max_error.png"
+)

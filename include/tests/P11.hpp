@@ -13,13 +13,15 @@ double H = 0.1;
 int N = 120;
 std::vector<double> alphas = {0.5, 1.0};
 
-void P11_ml(
+void P11(
     double z0 = -1.0, double zEnd = 0.0, double dz = 0.01
 ){
-    std::filesystem::path dir = std::filesystem::current_path();
-    std::filesystem::path data_dir = dir / "data/P11_ml";
+    namespace fs = std::filesystem;
+    fs::path dir = std::filesystem::current_path();
+    fs::path data_dir = dir / "data/P11";
+    fs::create_directories(data_dir);
 
-    std::ofstream file(data_dir / "P11_ml.csv");
+    std::ofstream file(data_dir / "P11.csv");
     const int steps = static_cast<int>( (zEnd-z0)/dz );
 
     // normally c++ saves only 6 digits to csv => error at O(1e-6)

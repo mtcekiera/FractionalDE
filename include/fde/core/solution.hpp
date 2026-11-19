@@ -15,6 +15,7 @@ namespace fde{
 
         Sequence get_t() const;
 
+        double get_t(std::size_t n) const;
         Sequence get_y(std::size_t d) const;
         Sequence get_f(std::size_t d) const;
 
