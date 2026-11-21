@@ -73,7 +73,7 @@ P12Errors P12_single(
 
     return errors;
 }
-void P12(double alpha = 1.0){
+void P12(double alpha = 1.0, double T = 1.0){
 
     namespace fs = std::filesystem;
 
@@ -101,12 +101,22 @@ void P12(double alpha = 1.0){
 
         std::ofstream file(data_dir / (method.name + ".csv"));
 
-        file << "N,final_error,max_error\n";
-        file << std::scientific << std::setprecision(15);
+        file << "N,h,final_error,max_error\n";    
+        file << std::setprecision(
+            std::numeric_limits<double>::max_digits10 // 17 digits
+        );
 
-        for (int k = 4; k <= 10; ++k) {
+        std::size_t steps = 9;
+        const double exp_start = -1.0;
+        const double exp_end = -4.0;
+        const double exp_diff = (exp_end - exp_start) / steps;
 
-            const std::size_t N = std::size_t{1} << k;
+        for (std::size_t k = 0; k <= steps; k++) {
+            const double exponent = exp_start + k*exp_diff;
+
+            const double h = std::pow(10, exponent);
+
+            const std::size_t N = static_cast<std::size_t>(std::ceil(T / h));
 
             P12Errors errors = P12_single(
                 method.solver,
@@ -117,6 +127,7 @@ void P12(double alpha = 1.0){
             );
 
             file << N << ","
+                 << h << ","
                  << errors.final_error << ","
                  << errors.max_error << "\n";
         }

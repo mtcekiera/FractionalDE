@@ -49,14 +49,22 @@ void P13(){
                 data_dir / (method.name + ".csv")
             );
 
-            file << "N,final_error,max_error,eoc_final,eoc_max\n";
+            file << "N,h,final_error,max_error,eoc_final,eoc_max\n";
             file << std::scientific << std::setprecision(15);
 
             P12Errors previous = {0.0, 0.0};
 
-            for (int k = 4; k <= 10; ++k) {
+            std::size_t steps = 9;
+            const double exp_start = -1.0;
+            const double exp_end = -4.0;
+            const double exp_diff = (exp_end - exp_start) / steps;
 
-                const std::size_t N = std::size_t{1} << k;
+            for (std::size_t k = 0; k <= steps; k++) {
+                const double exponent = exp_start + k*exp_diff;
+
+                const double h = std::pow(10, exponent);
+
+                const std::size_t N = static_cast<std::size_t>(std::ceil(T / h));
 
                 P12Errors errors = P12_single(
                     method.solver,
@@ -67,11 +75,12 @@ void P13(){
                 );
 
                 file << N << ","
+                     << h << ","
                      << errors.final_error << ","
                      << errors.max_error << ",";
 
                 // EOC for final error
-                if (k > 4 &&
+                if (k > 0 &&
                     previous.final_error > 0.0 &&
                     errors.final_error > 0.0) {
 
@@ -83,7 +92,7 @@ void P13(){
                 file << ",";
 
                 // EOC for maximum error
-                if (k > 4 &&
+                if (k > 0 &&
                     previous.max_error > 0.0 &&
                     errors.max_error > 0.0) {
 

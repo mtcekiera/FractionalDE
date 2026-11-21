@@ -12,7 +12,11 @@
 #include <fde/solvers/abm_solver.hpp>
 #include <fde/solvers/pt_solver.hpp>
 
+#include <fde/extra/special_functions.hpp>
+
 #include <tests/P11.hpp>
+#include <tests/P11_extra.hpp>
+#include <tests/P11_extra2.hpp>
 #include <tests/P12.hpp>
 #include <tests/P13.hpp>
 #include <tests/P14.hpp>

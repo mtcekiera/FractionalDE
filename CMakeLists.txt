@@ -30,4 +30,4 @@ target_include_directories(fde PUBLIC
 # Executable
 add_executable(main main.cpp)
 
-target_link_libraries(main PRIVATE fde)
+target_link_libraries(main PRIVATE fde quadmath)

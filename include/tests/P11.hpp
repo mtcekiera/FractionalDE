@@ -8,13 +8,17 @@
 #include <vector>
 #include <filesystem>
 
-double MU = 2.0;
-double H = 0.1;
-int N = 120;
-std::vector<double> alphas = {0.5, 1.0};
+namespace p11{
+    double MU = 2.0;
+    double H = 0.1;
+    int N = 120;
+
+}
 
 void P11(
-    double z0 = -1.0, double zEnd = 0.0, double dz = 0.01
+    double z0 = -1.0, double zEnd = 0.0, double dz = 0.01,
+    std::vector<double> alphas = {0.5, 1.0}
+
 ){
     namespace fs = std::filesystem;
     fs::path dir = std::filesystem::current_path();
@@ -38,7 +42,7 @@ void P11(
         file << z;
         for (auto alpha : alphas){
             const double val = 
-                fde::mittag_leffler_gerrappa(z, alpha, MU, H, N);
+                fde::mittag_leffler_gerrappa(z, alpha, p11::MU, p11::H, p11::N);
             file << "," << val;
         }
             
@@ -46,5 +50,4 @@ void P11(
     }   
 
     file.close();
-
 }
